@@ -5,10 +5,8 @@ const path = require('path');
 
 async function runMigrations() {
   const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-    ssl: process.env.NODE_ENV === 'production'
-      ? { rejectUnauthorized: true }
-      : { rejectUnauthorized: false },
+    connectionString: process.env.DATABASE_URL ? process.env.DATABASE_URL.replace(/\?sslmode=require$/, '') : process.env.DATABASE_URL,
+    ssl: { rejectUnauthorized: false },
   });
 
   try {

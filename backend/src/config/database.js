@@ -5,14 +5,21 @@ const logger = require('./logger');
 let pool = null;
 
 const createPool = () => {
+  const ssl = config.nodeEnv === 'production'
+    ? { rejectUnauthorized: false }
+    : { rejectUnauthorized: false };
+
+  // Remove sslmode from connection string to avoid conflicts with pool ssl config
+  const connectionString = config.databaseUrl
+    ? config.databaseUrl.replace(/\?sslmode=require$/, '')
+    : config.databaseUrl;
+
   return new Pool({
-    connectionString: config.databaseUrl,
-    ssl: config.nodeEnv === 'production'
-      ? { rejectUnauthorized: true }
-      : { rejectUnauthorized: false },
+    connectionString,
+    ssl,
     max: 20,
     idleTimeoutMillis: 30000,
-    connectionTimeoutMillis: 10000,
+    connectionTimeoutMillis: 30000,
   });
 };
 
