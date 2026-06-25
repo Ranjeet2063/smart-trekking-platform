@@ -30,6 +30,12 @@ async function runSeeds() {
         name: 'Rescue Demo',
         role: 'rescue',
       },
+      {
+        email: 'passwordranjeet9865@user.com',
+        password: '12345678',
+        name: 'Ranjeet',
+        role: 'trekker',
+      },
     ];
 
     for (const user of demoUsers) {
@@ -49,12 +55,13 @@ async function runSeeds() {
     }
 
     console.log('\n=== DEMO ACCOUNTS ===');
-    console.log('| Email           | Password     | Role     |');
-    console.log('|-----------------|--------------|----------|');
-    console.log('| 123@demo.com    | 123          | trekker  |');
-    console.log('| family@demo.com | Family@123   | family   |');
-    console.log('| rescue@demo.com | Rescue@123   | rescue   |');
-    console.log('=====================');
+    console.log('| Email                    | Password     | Role     |');
+    console.log('|--------------------------|--------------|----------|');
+    console.log('| 123@demo.com             | 123          | trekker  |');
+    console.log('| family@demo.com          | Family@123   | family   |');
+    console.log('| rescue@demo.com          | Rescue@123   | rescue   |');
+    console.log('| passwordranjeet9865@user.com | 12345678 | trekker  |');
+    console.log('==============================');
   } catch (error) {
     console.error('Seed failed:', error);
     process.exit(1);
