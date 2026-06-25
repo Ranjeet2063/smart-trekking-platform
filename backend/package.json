@@ -12,7 +12,8 @@
     "lint:fix": "eslint src/ --fix",
     "migrate": "node database/migrate.js",
     "migrate:create": "node scripts/create-migration.js",
-    "seed": "node database/seeds/run.js"
+    "seed": "node database/seeds/run.js",
+    "seed:demo": "node database/seeds/run.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

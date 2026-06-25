@@ -75,7 +75,7 @@ export default function Login() {
 
           <div className="mt-4 pt-4 border-t border-gray-100">
             <p className="text-xs text-center text-gray-400">
-              Demo accounts: trekker@test.com / Family@123
+              Demo: 123@demo.com / 123 &nbsp;·&nbsp; family@demo.com / Family@123
             </p>
           </div>
         </div>

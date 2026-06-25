@@ -29,7 +29,10 @@ const register = async (userData) => {
   const user = result.rows[0];
   const tokens = await generateTokens(user);
 
-  return { user, ...tokens };
+  return {
+    user: { ...user, auth_provider: 'local' },
+    ...tokens,
+  };
 };
 
 const login = async (email, password) => {
@@ -64,6 +67,7 @@ const login = async (email, password) => {
       name: user.name,
       role: user.role,
       avatar_url: user.avatar_url,
+      auth_provider: 'local',
     },
     ...tokens,
   };
@@ -132,8 +136,8 @@ const resetPassword = async (token, newPassword) => {
 
 const getMe = async (userId) => {
   const result = await query(
-    `SELECT id, email, name, phone, avatar_url, role, medical_info,
-            notification_preferences, is_verified, created_at, last_login_at
+    `SELECT id, email, name, phone, avatar_url, profile_picture, role, medical_info,
+            auth_provider, notification_preferences, is_verified, created_at, last_login_at
      FROM users WHERE id = $1`,
     [userId]
   );
