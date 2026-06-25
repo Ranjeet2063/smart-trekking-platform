@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { useAuthStore } from '../store/authStore';
+import GoogleSignIn from '../components/GoogleSignIn';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -62,6 +63,8 @@ export default function Login() {
               {isLoading ? 'Signing in...' : 'Sign In'}
             </button>
           </form>
+
+          <GoogleSignIn />
 
           <p className="mt-6 text-center text-sm text-gray-500">
             Don't have an account?{' '}

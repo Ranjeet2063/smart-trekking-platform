@@ -100,6 +100,29 @@ const getMe = async (req, res, next) => {
   }
 };
 
+const googleLogin = async (req, res, next) => {
+  try {
+    const { credential } = req.body;
+    if (!credential) {
+      return res.status(400).json({ success: false, message: 'Google credential is required' });
+    }
+    const result = await authService.googleLogin(credential);
+    res.json({
+      success: true,
+      message: 'Google sign-in successful',
+      data: result,
+    });
+  } catch (error) {
+    if (error.message === 'Invalid Google credential' || error.message === 'Account is deactivated') {
+      return res.status(401).json({ success: false, message: error.message });
+    }
+    if (error.message.includes('Google token verification failed')) {
+      return res.status(401).json({ success: false, message: 'Google authentication failed' });
+    }
+    next(error);
+  }
+};
+
 module.exports = {
   register,
   login,
@@ -108,4 +131,5 @@ module.exports = {
   forgotPassword,
   resetPassword,
   getMe,
+  googleLogin,
 };

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { useAuthStore } from '../store/authStore';
+import GoogleSignIn from '../components/GoogleSignIn';
 
 export default function Register() {
   const [form, setForm] = useState({ name: '', email: '', password: '', confirmPassword: '', role: 'trekker' });
@@ -85,6 +86,8 @@ export default function Register() {
               {isLoading ? 'Creating account...' : 'Create Account'}
             </button>
           </form>
+
+          <GoogleSignIn />
 
           <p className="mt-6 text-center text-sm text-gray-500">
             Already have an account?{' '}

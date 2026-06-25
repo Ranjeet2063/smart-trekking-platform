@@ -65,6 +65,24 @@ export const useAuthStore = create((set, get) => ({
     }
   },
 
+  googleLogin: async (credential) => {
+    set({ isLoading: true });
+    try {
+      const { data } = await authAPI.google(credential);
+      const authData = {
+        user: data.data.user,
+        accessToken: data.data.accessToken,
+        refreshToken: data.data.refreshToken,
+      };
+      localStorage.setItem('auth', JSON.stringify(authData));
+      set({ ...authData, isAuthenticated: true, isLoading: false });
+      return data;
+    } catch (error) {
+      set({ isLoading: false });
+      throw error;
+    }
+  },
+
   logout: () => {
     const refreshToken = get().refreshToken;
     authAPI.logout(refreshToken).catch(() => {});

@@ -1,10 +1,13 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
+const { OAuth2Client } = require('google-auth-library');
 const { query } = require('../config/database');
 const config = require('../config');
 const logger = require('../config/logger');
 const { v4: uuidv4 } = require('uuid');
+
+const googleClient = new OAuth2Client(config.googleClientId);
 
 const register = async (userData) => {
   const { email, password, name, phone, role } = userData;
@@ -169,6 +172,72 @@ const generateTokens = async (user) => {
   };
 };
 
+const googleLogin = async (credential) => {
+  let ticket;
+  try {
+    ticket = await googleClient.verifyIdToken({
+      idToken: credential,
+      audience: config.googleClientId,
+    });
+  } catch (error) {
+    logger.error('Google token verification failed:', error.message);
+    throw new Error('Invalid Google credential');
+  }
+
+  const payload = ticket.getPayload();
+  if (!payload) {
+    throw new Error('Invalid Google credential');
+  }
+
+  const { sub: googleId, email, name, picture } = payload;
+
+  let userResult = await query(
+    'SELECT id, email, name, role, avatar_url, auth_provider, google_id, is_active FROM users WHERE email = $1',
+    [email.toLowerCase()]
+  );
+
+  let user;
+  if (userResult.rows.length > 0) {
+    user = userResult.rows[0];
+
+    if (!user.is_active) {
+      throw new Error('Account is deactivated');
+    }
+
+    if (user.auth_provider === 'local' && !user.google_id) {
+      const result = await query(
+        `UPDATE users SET google_id = $1, auth_provider = 'google', profile_picture = COALESCE($2, profile_picture), avatar_url = COALESCE($2, avatar_url), updated_at = NOW(), last_login_at = NOW() WHERE id = $3 RETURNING id, email, name, role, avatar_url, auth_provider`,
+        [googleId, picture, user.id]
+      );
+      user = result.rows[0];
+    } else {
+      await query('UPDATE users SET last_login_at = NOW() WHERE id = $1', [user.id]);
+    }
+  } else {
+    const insertResult = await query(
+      `INSERT INTO users (email, name, role, auth_provider, google_id, profile_picture, avatar_url, is_verified)
+       VALUES ($1, $2, 'trekker', 'google', $3, $4, $4, true)
+       RETURNING id, email, name, role, avatar_url, auth_provider`,
+      [email.toLowerCase(), name, googleId, picture]
+    );
+    user = insertResult.rows[0];
+  }
+
+  const tokens = await generateTokens(user);
+
+  return {
+    user: {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      role: user.role,
+      avatar_url: user.avatar_url,
+      auth_provider: user.auth_provider,
+    },
+    ...tokens,
+  };
+};
+
 module.exports = {
   register,
   login,
@@ -177,4 +246,5 @@ module.exports = {
   forgotPassword,
   resetPassword,
   getMe,
+  googleLogin,
 };

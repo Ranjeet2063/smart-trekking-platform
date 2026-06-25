@@ -12,6 +12,7 @@ const config = {
   rateLimitWindowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 60000,
   rateLimitMax: parseInt(process.env.RATE_LIMIT_MAX) || 100,
   bcryptSaltRounds: parseInt(process.env.BCRYPT_SALT_ROUNDS) || 12,
+  googleClientId: process.env.GOOGLE_CLIENT_ID,
   logLevel: process.env.LOG_LEVEL || 'debug',
 };
 
