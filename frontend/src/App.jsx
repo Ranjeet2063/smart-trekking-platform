@@ -1,10 +1,8 @@
 import { useEffect } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { useAuthStore } from './store/authStore';
 import Layout from './components/Layout';
 import ProtectedRoute from './components/ProtectedRoute';
-import Login from './pages/Login';
-import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Treks from './pages/Treks';
 import TrekDetail from './pages/TrekDetail';
@@ -17,7 +15,7 @@ import EmergencyContacts from './pages/EmergencyContacts';
 import NotFound from './pages/NotFound';
 
 export default function App() {
-  const { user, isLoading } = useAuthStore();
+  const { isLoading } = useAuthStore();
 
   useEffect(() => {
     useAuthStore.getState().initialize();
@@ -33,9 +31,6 @@ export default function App() {
 
   return (
     <Routes>
-      <Route path="/login" element={user ? <Navigate to="/" replace /> : <Login />} />
-      <Route path="/register" element={user ? <Navigate to="/" replace /> : <Register />} />
-
       <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
         <Route path="/" element={<Dashboard />} />
         <Route path="/treks" element={<Treks />} />

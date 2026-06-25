@@ -12,7 +12,7 @@ const initialState = {
 export const useAuthStore = create((set, get) => ({
   ...initialState,
 
-  initialize: () => {
+  initialize: async () => {
     const stored = localStorage.getItem('auth');
     if (stored) {
       try {
@@ -23,9 +23,26 @@ export const useAuthStore = create((set, get) => ({
           refreshToken: parsed.refreshToken,
           isAuthenticated: true,
         });
+        return;
       } catch {
         localStorage.removeItem('auth');
       }
+    }
+    await get().demoLogin();
+  },
+
+  demoLogin: async () => {
+    try {
+      const { data } = await authAPI.login({ email: '123@demo.com', password: '123' });
+      const authData = {
+        user: data.data.user,
+        accessToken: data.data.accessToken,
+        refreshToken: data.data.refreshToken,
+      };
+      localStorage.setItem('auth', JSON.stringify(authData));
+      set({ ...authData, isAuthenticated: true });
+    } catch {
+      set({ isLoading: false });
     }
   },
 

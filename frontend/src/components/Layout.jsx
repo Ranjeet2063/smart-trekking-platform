@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Outlet, NavLink, useNavigate } from 'react-router-dom';
+import { Outlet, NavLink } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 
 const navItems = [
@@ -13,11 +13,10 @@ const navItems = [
 export default function Layout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { user, logout } = useAuthStore();
-  const navigate = useNavigate();
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
+    window.location.reload();
   };
 
   const isRescueOrAdmin = user?.role === 'rescue' || user?.role === 'admin' || user?.role === 'operator';
