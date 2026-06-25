@@ -118,7 +118,7 @@ export default function LiveMap() {
     <div className="max-w-7xl mx-auto space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <Link to={`/treks/${id}`} className="text-sm text-gray-500 hover:text-gray-700">← Back to Trek</Link>
+          <Link to={`/treks/${trekId}`} className="text-sm text-gray-500 hover:text-gray-700">← Back to Trek</Link>
           <h1 className="text-xl font-bold text-gray-900 mt-1">Live Tracking: {trek?.name}</h1>
         </div>
         <div className="flex items-center space-x-3">
@@ -127,7 +127,7 @@ export default function LiveMap() {
           ) : (
             <button onClick={stopTracking} className="btn-danger">Stop Tracking</button>
           )}
-          <SOSButton trekId={id} />
+          <SOSButton trekId={trekId} />
         </div>
       </div>
 
@@ -171,7 +171,7 @@ export default function LiveMap() {
           <div className="card">
             <h3 className="font-semibold text-gray-900 mb-3">Quick Actions</h3>
             <div className="space-y-2">
-              <SOSButton trekId={id} className="w-full" />
+              <SOSButton trekId={trekId} className="w-full" />
             </div>
           </div>
         </div>

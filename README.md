@@ -51,7 +51,7 @@ cd smart-trekking-platform
 ### 2. Backend Setup
 
 ```bash
-cd backend
+cd
 cp .env.example .env
 # Edit .env with your database URL and JWT secrets
 npm install
