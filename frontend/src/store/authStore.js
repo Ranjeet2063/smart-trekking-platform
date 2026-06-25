@@ -13,6 +13,7 @@ export const useAuthStore = create((set, get) => ({
   ...initialState,
 
   initialize: async () => {
+    set({ isLoading: true });
     const stored = localStorage.getItem('auth');
     if (stored) {
       try {
@@ -22,6 +23,7 @@ export const useAuthStore = create((set, get) => ({
           accessToken: parsed.accessToken,
           refreshToken: parsed.refreshToken,
           isAuthenticated: true,
+          isLoading: false,
         });
         return;
       } catch {
@@ -40,7 +42,7 @@ export const useAuthStore = create((set, get) => ({
         refreshToken: data.data.refreshToken,
       };
       localStorage.setItem('auth', JSON.stringify(authData));
-      set({ ...authData, isAuthenticated: true });
+      set({ ...authData, isAuthenticated: true, isLoading: false });
     } catch {
       set({ isLoading: false });
     }
